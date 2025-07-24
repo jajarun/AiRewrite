@@ -30,7 +30,11 @@ async def main():
             change_style="Casual",
         )
     )
-    print(result)
+    for platform, result in result["rewrite_results"].items():
+        print("--------------------------------")
+        print(platform)
+        print(result.content)
+        print("--------------------------------")
 
 if __name__ == "__main__":
     asyncio.run(main())

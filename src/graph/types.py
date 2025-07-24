@@ -2,8 +2,9 @@ from langgraph.graph import MessagesState
 from typing import Literal, Annotated
 import operator
 from pydantic import BaseModel
-
+from langchain_core.messages import AIMessage
 _platfrom_types = Literal["whatsapp", "facebook", "instagram", "x"]
+_change_style_types = Literal["Casual", "Friendly", "Professional", "Persuasive"]
 
 class State(MessagesState):
     write_type: Literal["url", "post"]
@@ -11,15 +12,11 @@ class State(MessagesState):
     article_title: str
     article_content: str
     platforms: list[_platfrom_types]
-    change_style: Literal["short", "long"]
-    change_target: Literal["all", "specific"]
-    change_topic_or_product: Literal["all", "specific"]
-    rewrite_results: Annotated[dict[str, any], operator.or_]
+    change_style: _change_style_types
+    rewrite_results: Annotated[dict[_platfrom_types, AIMessage], operator.or_]
 
 class workerState(BaseModel):
     platform: _platfrom_types
     article_title: str
     article_content: str
-    change_style: Literal["Casual", "Friendly", "Professional", "Persuasive"]
-    # change_target: Literal["all", "specific"]
-    # change_topic_or_product: Literal["all", "specific"]
+    change_style: _change_style_types

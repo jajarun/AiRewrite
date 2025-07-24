@@ -1,0 +1,4 @@
+langchain-core==0.3.72
+langchain-openai==0.3.28
+langgraph==0.5.4
+newspaper3k==0.2.8

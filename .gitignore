@@ -1,0 +1,14 @@
+# Python-generated files
+__pycache__/
+
+# Virtual environments
+.venv
+venv/
+
+# Environment variables
+.env
+
+# user conf
+conf.yaml
+
+.idea/

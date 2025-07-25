@@ -1,19 +1,46 @@
 from langgraph.graph import StateGraph, START, END
 from src.graph.types import State
-from src.graph.node import coordinator_node, assgin_worker_write, worker_rewrite_node
+from src.graph.node import coordinator_node, assgin_worker_write, worker_rewrite_node, human_interrupt_node
+from dotenv import load_dotenv
 import asyncio
+from langgraph.checkpoint.memory import MemorySaver
+
 def _build_base_graph():
+    load_dotenv()
     graph = StateGraph(State)
     graph.add_node("coordinator", coordinator_node)
     graph.add_node("worker_rewrite", worker_rewrite_node)
+    graph.add_node("human_interrupt", human_interrupt_node)
     graph.add_edge(START, "coordinator")
     graph.add_conditional_edges(
         "coordinator",
         assgin_worker_write,
         ["worker_rewrite"]
     )
-    graph.add_edge("worker_rewrite", END)
+    graph.add_edge("worker_rewrite", "human_interrupt")
+    # graph.add_edge("human_interrupt", "coordinator")
+    # graph.add_conditional_edges(
+    #     source="human_interrupt",
+    #     path_map={
+    #         "coordinator": "coordinator",
+    #         END: END
+    #     }
+    # )
     return graph
+
+def build_graph_with_memory():
+    graph = _build_base_graph()
+    memory = MemorySaver()
+    return graph.compile(checkpointer=memory)
+
+def build_graph():
+    """Build and return the agent workflow graph without memory."""
+    # build state graph
+    builder = _build_base_graph()
+    return builder.compile()
+
+
+graph = build_graph()
 
 async def main():
     graph = _build_base_graph()
@@ -28,6 +55,8 @@ async def main():
             article_content="",
             platforms=["facebook","instagram","x"],
             change_style="Casual",
+            change_theme="",
+            local="zh-CN",
         )
     )
     for platform, result in result["rewrite_results"].items():

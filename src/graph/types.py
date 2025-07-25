@@ -13,10 +13,14 @@ class State(MessagesState):
     article_content: str
     platforms: list[_platfrom_types]
     change_style: _change_style_types
+    change_theme: str
     rewrite_results: Annotated[dict[_platfrom_types, AIMessage], operator.or_]
+    local: str
 
 class workerState(BaseModel):
     platform: _platfrom_types
     article_title: str
     article_content: str
     change_style: _change_style_types
+    change_theme: str
+    local: str

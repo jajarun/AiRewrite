@@ -52,3 +52,5 @@ CURRENT_TIME: {{ CURRENT_TIME }}
   - 列出2-3点行动建议或解决方案
   - 鼓励专业讨论
 {% endif %}
+
+用 {{local}} 语言输出

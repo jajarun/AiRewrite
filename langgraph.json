@@ -1,0 +1,8 @@
+{
+    "graphs": {
+      "rewrite": "./src/graph/build.py:graph"
+    },
+    "env": "./.env",
+    "dependencies": ["."]
+  }
+  

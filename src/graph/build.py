@@ -18,14 +18,6 @@ def _build_base_graph():
         ["worker_rewrite"]
     )
     graph.add_edge("worker_rewrite", "human_interrupt")
-    # graph.add_edge("human_interrupt", "coordinator")
-    # graph.add_conditional_edges(
-    #     source="human_interrupt",
-    #     path_map={
-    #         "coordinator": "coordinator",
-    #         END: END
-    #     }
-    # )
     return graph
 
 def build_graph_with_memory():

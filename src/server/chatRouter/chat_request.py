@@ -9,4 +9,4 @@ class RewriteRequest(BaseModel):
     platforms: list[_platfrom_types] = Field(default=[])
     change_style: _change_style_types = Field(default="Casual")
     local: str = Field(default="zh-CN")
-    change_theme: str = Field(default="")
+    humman_message: str = Field(default="")

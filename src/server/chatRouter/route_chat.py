@@ -63,8 +63,10 @@ async def _astream_generate(request: RewriteRequest):
             "agent": agent_name,
             "id": message_chunk.id,
             "role": "assistant",
-            "content": message_chunk.content,
+            "content": message_chunk.content
         }
+        if message_metadata.get("platform"):
+            event_stream_message["platform"] = message_metadata.get("platform")
         if message_chunk.additional_kwargs.get("reasoning_content"):
             event_stream_message["reasoning_content"] = message_chunk.additional_kwargs[
                 "reasoning_content"
@@ -76,7 +78,7 @@ async def _astream_generate(request: RewriteRequest):
         if isinstance(message_chunk, ToolMessage):
             # Tool Message - Return the result of the tool call
             event_stream_message["tool_call_id"] = message_chunk.tool_call_id
-            yield _make_event("tool_call_result", event_stream_message)
+            # yield _make_event("tool_call_result", event_stream_message)
         elif isinstance(message_chunk, AIMessageChunk):
             # AI Message - Raw message tokens
             if message_chunk.tool_calls:
@@ -85,13 +87,13 @@ async def _astream_generate(request: RewriteRequest):
                 event_stream_message["tool_call_chunks"] = (
                     message_chunk.tool_call_chunks
                 )
-                yield _make_event("tool_calls", event_stream_message)
+                # yield _make_event("tool_calls", event_stream_message)
             elif message_chunk.tool_call_chunks:
                 # AI Message - Tool Call Chunks
                 event_stream_message["tool_call_chunks"] = (
                     message_chunk.tool_call_chunks
                 )
-                yield _make_event("tool_call_chunks", event_stream_message)
+                # yield _make_event("tool_call_chunks", event_stream_message)
             else:
                 # AI Message - Raw message tokens
                 yield _make_event("message_chunk", event_stream_message)

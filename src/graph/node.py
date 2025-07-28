@@ -32,7 +32,14 @@ def worker_rewrite_node(state: workerState, config: RunnableConfig) -> Command[L
         input += [
             HumanMessage(content=f"Change the theme of the article: {state.change_theme}"),
         ]
-    result = llm.invoke(input=input)
+    result = llm.invoke(
+        input=input,
+        config={
+            "configurable": {
+                "platform": state.platform, #用于识别哪个worker
+            }
+        }
+    )
     #打印当前时间
     print("platform:"+state.platform+" end time:"+datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     return Command(
